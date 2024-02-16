@@ -89,7 +89,7 @@ main(int argc, char* argv[])
 	}
 
 	RCC_enable_CLK(CLK_SRC_RCC_PLL);
-	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_DIVIDEDB_256)
+	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_DIVIDEDB_256);
 }
 
 #pragma GCC diagnostic pop

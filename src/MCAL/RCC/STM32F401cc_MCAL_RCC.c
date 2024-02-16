@@ -5,6 +5,7 @@
  *      Author: Nour Moharram
  */
 #include"typedefs.h"
+#include"Masks.h"
 #include"STM32F401cc_MCAL_RCC.h"
 
 
@@ -42,19 +43,22 @@
  * PLLCFGR  mask to clear P,N,M,Q configurations
  * use with &=
  * */
-#define RCC_PLLCFGR_CLRMASK				0x00400000
+#define RCC_PLLCFGR_CLRMASK				BIT22_MASK
 /*
  * PLLCFGR Register to preserve the value PLL clock source
  * use with &= ~(mask)
  * */
-#define CLK_SRC_PLL_CLR_MASK			0x00400000
+#define CLK_SRC_PLL_CLR_MASK			BIT22_MASK
 
 /*CFGR Clear mask
  * used to clear the bits of clock selection for system clock
  * use with &=~(mask)
  * */
 #define CLK_SRC_SYS_CLRMASK				0x00000003 // &=~
-
+/*
+ * RCC_CFGR_Register : Masks to read the current system clock
+ * */
+#define RCC_CURRENT_SYS_CLK_MASK		0x0000000c
 /*RCC Peripherals*/
 typedef struct
 {
@@ -81,12 +85,29 @@ typedef struct
 /*RCC base address*/
 #define RCC							((volatile RCC *)(RCC_BASE_ADDRESS))
 
-
+/*
+ * Function Name: RCC_enable_CLK
+ *
+ * Function Description: Used to enable a clock source.
+ *
+ * Function Input arguments:
+ *    CLK_SRC_RCC: Clock source to be enabled.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options:
+ *          CLK_SRC_RCC_HSI
+ *          CLK_SRC_RCC_HSE
+ *          CLK_SRC_RCC_PLL
+ *          CLK_SRC_RCC_PLL_I2S
+ */
 RCC_enuError_status RCC_enable_CLK(u32 CLK_SRC_RCC)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
 	u32 Local_RCC_CR=0;
-	if(CLK_SRC_RCC<CLK_SRC_RCC_HSE || CLK_SRC_RCC>CLK_SRC_RCC_PLL_I2S)
+	if(CLK_SRC_RCC!=CLK_SRC_RCC_HSE && CLK_SRC_RCC!=CLK_SRC_RCC_HSI && CLK_SRC_RCC!=CLK_SRC_RCC_PLL && CLK_SRC_RCC!=CLK_SRC_RCC_PLL_I2S)
 	{
 		Error_Status=RCC_INPUT_ERROR;
 	}
@@ -102,12 +123,30 @@ RCC_enuError_status RCC_enable_CLK(u32 CLK_SRC_RCC)
 	return Error_Status;
 }
 
-
+/*
+ * Function Name: RCC_disble_CLK
+ *
+ * Function Description: Used to disable a clock source.
+ *
+ * Function Input arguments:
+ *    CLK_SRC_RCC: Clock source to be disabled.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: -clock can not be disabled if it is the system clock
+ * 				- if the clock is a clock source for PLL and PLL is a system clock so it can not be disabled
+ *
+ * options:
+ *          CLK_SRC_RCC_HSI
+ *          CLK_SRC_RCC_HSE
+ *          CLK_SRC_RCC_PLL
+ *          CLK_SRC_RCC_PLL_I2S
+ */
 RCC_enuError_status RCC_disble_CLK(u32 CLK_SRC_RCC)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
 	u32 Local_RCC_CR=0;
-	if(CLK_SRC_RCC<CLK_SRC_RCC_HSE || CLK_SRC_RCC>CLK_SRC_RCC_PLL_I2S)
+	if(CLK_SRC_RCC!=CLK_SRC_RCC_HSE && CLK_SRC_RCC!=CLK_SRC_RCC_HSI && CLK_SRC_RCC!=CLK_SRC_RCC_PLL && CLK_SRC_RCC!=CLK_SRC_RCC_PLL_I2S)
 	{
 		Error_Status=RCC_INPUT_ERROR;
 	}
@@ -121,12 +160,29 @@ RCC_enuError_status RCC_disble_CLK(u32 CLK_SRC_RCC)
 
 	return Error_Status;
 }
-
+/*
+ * Function Name: RCC_ReadClkStatus
+ *
+ * Function Description: Used to read the status of a clock source.
+ *
+ * Function Input arguments:
+ *    CLK_STATUS_RCC: Clock status to be read.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options:
+ *          CLK_STATUS_RCC_HSI
+ *          CLK_STATUS_RCC_HSE
+ *          CLK_STATUS_RCC_PLL
+ *          CLK_STATUS_RCC_PLLI2S
+ */
 RCC_enuError_status RCC_ReadClkStatus(u32 CLK_STATUS_RCC)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
 	u16 Max_delay=200;
-	if(CLK_STATUS_RCC<CLK_STATUS_RCC_HSI || CLK_STATUS_RCC > CLK_SRC_RCC_PLL_I2S)
+	if(CLK_STATUS_RCC!=CLK_STATUS_RCC_HSI && CLK_STATUS_RCC!=CLK_STATUS_RCC_HSE && CLK_STATUS_RCC!=CLK_STATUS_RCC_PLL && CLK_STATUS_RCC!=CLK_STATUS_RCC_PLLI2S)
 	{
 		Error_Status=RCC_INPUT_ERROR;
 	}
@@ -149,7 +205,23 @@ RCC_enuError_status RCC_ReadClkStatus(u32 CLK_STATUS_RCC)
 	return Error_Status;
 
 }
-
+/*
+ * Function Name: RCC_SELECT_PLLCLKSRC
+ *
+ * Function Description: Used to select the PLL clock source.
+ *
+ * Function Input arguments:
+ *    CLK_SRC_PLL: PLL clock source to be selected.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: -the PLL clock must be disabled first before configuring it
+ * 				-the selected clock source must be enabled first
+ *
+ * options:
+ *          CLK_SRC_PLL_HSI
+ *          CLK_SRC_PLL_HSE
+ */
 RCC_enuError_status RCC_SELECT_PLLCLKSRC(u32 CLK_SRC_PLL)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
@@ -168,6 +240,27 @@ RCC_enuError_status RCC_SELECT_PLLCLKSRC(u32 CLK_SRC_PLL)
 	}
 	return Error_Status;
 }
+/*
+ * Function Name: RCC_CONFIG_PLL
+ *
+ * Function Description: Used to configure the PLL settings.
+ *
+ * Function Input arguments:
+ *    Copyu8_PLLQ: PLLQ value.
+ *    Copyu8_PLLM: PLLM value.
+ *    Copyu16_PLLN: PLLN value.
+ *    Copyu8_PLLP: PLLP value.
+ *
+ * Function return type: RCC_enuError_status
+ *
+* constraints: -the PLL clock must be disabled first before configuring it
+* 			   - The ranges of options below must follow the following limits
+ * 				- 2 <= Copyu8_PLLQ <= 15
+ * 				- 2 <= Copyu8_PLLM <= 63
+ * 				- 192 <= Copyu16_PLLN <= 432
+ * 				- Copyu8_PLLP = {2,4,6,8};
+ * options: PLLN,PLLM,PLLQ & PLLP
+ */
 RCC_enuError_status RCC_CONFIG_PLL(u8 Copyu8_PLLQ,u8 Copyu8_PLLM,u16 Copyu16_PLLN,u8 Copyu8_PLLP)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
@@ -206,7 +299,24 @@ RCC_enuError_status RCC_CONFIG_PLL(u8 Copyu8_PLLQ,u8 Copyu8_PLLM,u16 Copyu16_PLL
 	return Error_Status;
 }
 
-
+/*
+ * Function Name: RCC_SELECT_SYSCLK
+ *
+ * Function Description: Used to select the system clock source.
+ *
+ * Function Input arguments:
+ *    CLK_SRC_SYS: System clock source to be selected.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: -The selected clock must be enabled first and ready
+ * 				-if the selected clock is PLL it must be configured and locked
+ *
+ * options:
+ *          CLK_SRC_SYS_HSI
+ *          CLK_SRC_SYS_HSE
+ *          CLK_SRC_SYS_PLL
+ */
 RCC_enuError_status RCC_SELECT_SYSCLK(u32 CLK_SRC_SYS)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
@@ -225,14 +335,41 @@ RCC_enuError_status RCC_SELECT_SYSCLK(u32 CLK_SRC_SYS)
 	}
 	return Error_Status;
 }
-
-RCC_enuError_status RCC_READ_CURRENTSYSCLK(void)
+/*
+ * Function Name: RCC_READ_CURRENTSYSCLK
+ *
+ * Function Description: Used to read the current system clock.
+ *
+ * Function Input arguments: None
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options: NO options
+ */
+u32 RCC_READ_CURRENTSYSCLK(void)
 {
-	RCC_enuError_status Error_Status=0;
-
-
-	return Error_Status;
+	u32 current_sysclk_src=0xff;
+	current_sysclk_src = RCC->CFGR & RCC_CURRENT_SYS_CLK_MASK;
+	return current_sysclk_src;
 }
+/*
+ * Function Name: RCC_EnableDisable_PERIPHCLK
+ *
+ * Function Description: Used to enable or disable peripheral clock.
+ *
+ * Function Input arguments:
+ *    Bus_type: Type of bus (AHB1, AHB2, APB1, APB2).
+ *    CopyPeripheralID: Peripheral ID.
+ *    CopyPeripheralStatus: Status to enable/disable the peripheral clock.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options: See specific peripheral enable macros.
+ */
 RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 CopyPeripheralID, u8 CopyPeripheralStatus)
 {
 	RCC_enuError_status Erro_Status=RCC_OK;
@@ -338,6 +475,21 @@ RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 Copy
 
 	return Erro_Status;
 }
+
+/*
+ * Function Name: RCC_CONFIG_AHB_PRESCALLER
+ *
+ * Function Description: Used to configure AHB bus prescaler.
+ *
+ * Function Input arguments:
+ *    SYSCLK_AHB: AHB prescaler value.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options: See AHB bus prescaler macros.
+ */
 RCC_enuError_status RCC_CONFIG_AHB_PRESCALLER(u32 SYSCLK_AHB)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
@@ -363,7 +515,20 @@ RCC_enuError_status RCC_CONFIG_AHB_PRESCALLER(u32 SYSCLK_AHB)
 	}
 	return Error_Status;
 }
-
+/*
+ * Function Name: RCC_CONFIG_APB1_PRESCALLER
+ *
+ * Function Description: Used to configure APB1 bus prescaler.
+ *
+ * Function Input arguments:
+ *    AHBCLK_PPRE1: APB1 prescaler value.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options: See APB1 bus prescaler macros.
+ */
 RCC_enuError_status RCC_CONFIG_APB1_PRESCALLER(u32 AHBCLK_PPRE1)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;
@@ -389,7 +554,20 @@ RCC_enuError_status RCC_CONFIG_APB1_PRESCALLER(u32 AHBCLK_PPRE1)
 	}
 	return Error_Status;
 }
-
+/*
+ * Function Name: RCC_CONFIG_APB2_PRESCALLER
+ *
+ * Function Description: Used to configure APB2 bus prescaler.
+ *
+ * Function Input arguments:
+ *    AHBCLK_PPRE2: APB2 prescaler value.
+ *
+ * Function return type: RCC_enuError_status
+ *
+ * constraints: NO constraints
+ *
+ * options: See APB2 bus prescaler macros.
+ */
 RCC_enuError_status RCC_CONFIG_APB2_PRESCALLER(u32 AHBCLK_PPRE2)
 {
 	RCC_enuError_status Error_Status=RCC_NOK;

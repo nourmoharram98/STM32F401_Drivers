@@ -9,22 +9,22 @@
 #define MCAL_RCC_STM32F401CC_MCAL_RCC_H_
 
 #include"typedefs.h"
-
+#include"Masks.h"
 /*CR Register Masks For enable/disable the clock source
  * use the macros as options for function enable or function disable clock
  * */
-#define CLK_SRC_RCC_HSI  			0x00000001
-#define CLK_SRC_RCC_HSE				0x00010000
-#define	CLK_SRC_RCC_PLL				0x01000000
-#define CLK_SRC_RCC_PLL_I2S			0x04000000
+#define CLK_SRC_RCC_HSI  			BIT0_MASK
+#define CLK_SRC_RCC_HSE				BIT16_MASK
+#define	CLK_SRC_RCC_PLL				BIT24_MASK
+#define CLK_SRC_RCC_PLL_I2S			BIT30_ASK
 
 /*CR Register Masks for check the clock source status is ready or not
  * use the macros as options for function that read the clock status
  * */
-#define CLK_STATUS_RCC_HSI			0x00000002
-#define CLK_STATUS_RCC_HSE			0x00020000
-#define CLK_STATUS_RCC_PLL			0x02000000
-#define CLK_STATUS_RCC_PLLI2S		0x08000000
+#define CLK_STATUS_RCC_HSI			BIT1_MASK
+#define CLK_STATUS_RCC_HSE			BIT17_MASK
+#define CLK_STATUS_RCC_PLL			BIT25_MASK
+#define CLK_STATUS_RCC_PLLI2S		BIT27_MASK
 
 
 
@@ -32,7 +32,7 @@
  * use the macros as options for function that set pll clock source
  * */
 #define CLK_SRC_PLL_HSI				0x00000000 // |=
-#define CLK_SRC_PLL_HSE				0x00400000 // |=
+#define CLK_SRC_PLL_HSE				BIT22_MASK // |=
 
 
 /*
@@ -40,22 +40,29 @@
  *use macros as options for selecting system clock source function
  */
 #define CLK_SRC_SYS_HSI						0x00000000
-#define CLK_SRC_SYS_HSE						0x00000001
-#define CLK_SRC_SYS_PLL						0x00000002
+#define CLK_SRC_SYS_HSE						BIT0_MASK
+#define CLK_SRC_SYS_PLL						BIT1_MASK
 
+
+/*
+ * RCC_CFGR_Register : Masks to read the currect system clock
+ * */
+#define HSI_CURRENT_SYS_CLK					0x00000000
+#define HSE_CURRENT_SYS_CLK					BIT2_MASK
+#define PLL_CURRENT_SYS_CLK					BIT3_MASK
 /*AHB1 Peripherals CLK Enable Options
  *use macros as options for function that used to enable peripheral clock
  *
  * */
-#define AHB1_DMA2EN						0x00400000
-#define AHB1_DMA1EN						0x00200000
-#define AHB1_CRCEN						0x00001000
-#define AHB1_GPIOHEN					0x00000080
-#define AHB1_GPIOEEN					0x00000010
-#define AHB1_GPIODEN					0x00000008
-#define AHB1_GPIOCEN					0x00000004
-#define AHB1_GPIOBEN					0x00000002
-#define AHB1_GPIOAEN					0x00000001
+#define AHB1_DMA2EN						BIT22_MASK
+#define AHB1_DMA1EN						BIT21_MASK
+#define AHB1_CRCEN						BIT12_MASK
+#define AHB1_GPIOHEN					BIT7_MASK
+#define AHB1_GPIOEEN					BIT4_MASK
+#define AHB1_GPIODEN					BIT3_MASK
+#define AHB1_GPIOCEN					BIT2_MASK
+#define AHB1_GPIOBEN					BIT1_MASK
+#define AHB1_GPIOAEN					BIT0_MASK
 
 
 /*AHB2 ENABLE PERIPHERAL
@@ -68,33 +75,33 @@
 /*APB1 ENABLE PERIPHERAL
   *use macros as options for function that used to enable peripheral clock
  * */
-#define APB1_PWREN						0x10000000
-#define APB1_I2C3EN						0x00800000
-#define APB1_I2C2EN						0x00400000
-#define APB1_I2C1EN						0x00200000
-#define APB1_USART2EN					0x00020000
-#define APB1_SPI3EN						0x00008000
-#define APB1_SPI2EN						0x00004000
-#define APB1_WWDGEN						0x00000800
-#define APB1_TIM5EN						0x00000008
-#define APB1_TIM4EN						0x00000004
-#define APB1_TIM3EN						0x00000002
-#define APB1_TIM2EN						0x00000001
+#define APB1_PWREN						BIT28_MASK
+#define APB1_I2C3EN						BIT23_MASK
+#define APB1_I2C2EN						BIT22_MASK
+#define APB1_I2C1EN						BIT21_MASK
+#define APB1_USART2EN					BIT17_MASK
+#define APB1_SPI3EN						BIT15_MASK
+#define APB1_SPI2EN						BIT14_MASK
+#define APB1_WWDGEN						BIT11_MASK
+#define APB1_TIM5EN						BIT3_MASK
+#define APB1_TIM4EN						BIT2_MASK
+#define APB1_TIM3EN						BIT1_MASK
+#define APB1_TIM2EN						BIT0_MASK
 
 /*APB2 ENABLE PERIPHERAL
   *use macros as options for function that used to enable peripheral clock
  * */
-#define APB2_TIM11EN					0x00040000
-#define APB2_TIM10EN					0x00020000
-#define APB2_TIM9EN						0x00010000
-#define APB2_SYSCFGEN					0x00004000
-#define APB2_SPI4EN						0x00002000
-#define APB2_SPI1EN						0x00001000
-#define APB2_SDIOEN						0x00000800
-#define APB2_ADC1EN						0x00000100
-#define APB2_USART6EN					0x00000020
-#define APB2_USART1EN					0x00000010
-#define APB2_TIM1EN						0x00000001
+#define APB2_TIM11EN					BIT18_MASK
+#define APB2_TIM10EN					BIT17_MASK
+#define APB2_TIM9EN						BIT16_MASK
+#define APB2_SYSCFGEN					BIT14_MASK
+#define APB2_SPI4EN						BIT13_MASK
+#define APB2_SPI1EN						BIT12_MASK
+#define APB2_SDIOEN						BIT11_MASK
+#define APB2_ADC1EN						BIT8_MASK
+#define APB2_USART6EN					BIT5_MASK
+#define APB2_USART1EN					BIT4_MASK
+#define APB2_TIM1EN						BIT0_MASK
 
 #define PERIPHERAL_CLKENABLE				0x01
 #define PERIPHERAL_CLKDISABLE				0x00
@@ -160,6 +167,7 @@ typedef enum
 	RCC_PLLN_ERROR,
 	RCC_PLLQ_ERROR,
 	RCC_PLLM_ERROR,
+	RCC_HSI_IS_SYS
 }RCC_enuError_status;
 
 /*
@@ -303,13 +311,13 @@ RCC_enuError_status RCC_SELECT_SYSCLK(u32 CLK_SRC_SYS);
  *
  * Function Input arguments: None
  *
- * Function return type: RCC_enuError_status
+ * Function return type: the current system clock source
  *
  * constraints: NO constraints
  *
- * options: NO options
+ * options: if return
  */
-RCC_enuError_status RCC_READ_CURRENTSYSCLK(void);
+u32 RCC_READ_CURRENTSYSCLK(void);
 
 /*
  * Function Name: RCC_EnableDisable_PERIPHCLK
