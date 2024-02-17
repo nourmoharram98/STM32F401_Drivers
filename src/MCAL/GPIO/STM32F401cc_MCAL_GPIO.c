@@ -10,7 +10,7 @@
 #include"typedefs.h"
 #include"Masks.h"
 #include"Error_states.h"
-#include"STM32F401cc_MCAL_GPIO.h"
+#include"MCAL/GPIO/STM32F401cc_MCAL_GPIO.h"
 
 
 /*macros for configurations shifts*/
@@ -37,9 +37,13 @@
 #define GPIO_GET_PUPD_BITS_VALUE    0x00030000
 
 /*BSRR Macros*/
-#define BSSR_OFFSET                 16
-#define BSSR_BIT_VALUE              1
+#define BSRR_OFFSET                 16
+#define BSRR_BIT_VALUE              1
 
+/**
+ * @brief structure for the GPIO Peripheral Registers
+ * 
+ */
 typedef struct
 {
     u32 volatile GPIO_MODER;
@@ -54,7 +58,11 @@ typedef struct
     u32 volatile GPIO_AFRH;
 }GPIO_PortRegisters;
 
-
+/**
+ * @brief  Macros used to access the registers for the three GPIO Peripherals in the STM32F401cc
+ * @note not used in our implementation
+ * 
+ */
 #define GPIO_A							((volatile GPIO_PortRegisters*)(GPIOA_BASE_ADDRESS))
 #define GPIO_B							((volatile GPIO_PortRegisters*)(GPIOB_BASE_ADDRESS))
 #define GPIO_C							((volatile GPIO_PortRegisters*)(GPIOC_BASE_ADDRESS))
@@ -63,7 +71,7 @@ typedef struct
 /**
  * @brief function used to configure GPIO Pin
  * 
- * @param PtrToPinConfig 
+ * @param PtrToPinConfig (object from GPIO_PinConfigs_t struct that carry the GPIO pin configurations)
  * @return Sys_enuErrorStates_t 
  * @warning GPIO Port clock must be enabled before initialization 
  */
@@ -131,7 +139,7 @@ Sys_enuErrorStates_t GPIO_Init_Pin(GPIO_PinConfigs_t *PtrToPinConfig)
     return Error_Status;
 }
 /**
- * @brief 
+ * @brief function to set the corresponding pin value or reset its value using the BSRR register
  * 
  * @param PtrToGPIOPort 
  * @param GPIO_PINnum 
@@ -159,13 +167,13 @@ Sys_enuErrorStates_t GPIO_Set_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 
         /*Set the corresponding bit in the BSx (BSSR Set) in order to write high on the pin in one atomic instruction*/
         if(GPIO_PIN_STATUS==GPIO_PIN_STATUS_HIGH)
         {
-            ((GPIO_PortRegisters*)PtrToGPIOPort)->GPIO_BSRR = BSSR_BIT_VALUE<<GPIO_PINnum;
+            ((GPIO_PortRegisters*)PtrToGPIOPort)->GPIO_BSRR |= BSRR_BIT_VALUE<<GPIO_PINnum;
 
         }
         /*Set the corresponding bit in the BSx (BSSR Reset) in order to write low on the pin in one atomic instruction*/
         else
         {
-            ((GPIO_PortRegisters*)PtrToGPIOPort)->GPIO_BSRR = (BSSR_BIT_VALUE<<(GPIO_PINnum+BSSR_OFFSET));
+            ((GPIO_PortRegisters*)PtrToGPIOPort)->GPIO_BSRR |= (BSRR_BIT_VALUE<<(GPIO_PINnum+BSRR_OFFSET));
 
         }
         Error_Status=OK;
@@ -175,13 +183,13 @@ Sys_enuErrorStates_t GPIO_Set_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 
 }
 
 /**
- * @brief 
+ * @brief function used to read the status of the required pin from the IDR register
  * 
  * @param PtrToGPIOPort 
  * @param GPIO_PINnum 
  * @param PtrToPinstatus 
  * @return Sys_enuErrorStates_t
- * @warning  
+ * @warning GPIO Pin must be initialized first using GPIO_Init_Pin()  
  */
 Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u8 *PtrToPinstatus)
 {
@@ -209,3 +217,34 @@ Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u8 *
     return Error_Status;
 }
 
+/**
+ * @brief function used to toggle the pin status
+ * 
+ * @param PtrToGPIOPort 
+ * @param GPIO_PINnum 
+ * @return Sys_enuErrorStates_t 
+ * @warning GPIO Pin must be initialized first using GPIO_Init_Pin()  
+ */
+Sys_enuErrorStates_t GPIO_Toggle_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum)
+{
+    Sys_enuErrorStates_t Error_Status=NOT_OK;
+    if(PtrToGPIOPort>GPIOC_BASE_ADDRESS)
+    {
+        Error_Status=GPIO_PORT_ERROR;
+    }
+    else if(GPIO_PINnum > GPIO_PIN_15)
+    {
+        Error_Status=GPIO_PIN_NUM_ERROR;
+    }
+    else
+    {
+        /**
+         * @brief toggle the value of the ODR register responsible for output value on the corresponding pin
+         * 
+         */
+        ((GPIO_PortRegisters*)PtrToGPIOPort)->GPIO_ODR ^=1<<GPIO_PINnum;
+    }
+
+
+    return Error_Status;
+}

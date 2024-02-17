@@ -19,6 +19,7 @@
 typedef enum
 {
     Led_alarm,
+    Led_test,
     Number_of_leds
 }Leds_t;
 

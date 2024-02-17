@@ -8,8 +8,8 @@
  */
 #include"typedefs.h"
 #include"Error_states.h"
-#include"HAL_LED.h"
-#include"STM32F401cc_MCAL_GPIO.h"
+#include"MCAL/GPIO/STM32F401cc_MCAL_GPIO.h"
+#include"HAL/LED/HAL_LED.h"
 
 
 const Led_cfg_t leds[Number_of_leds];
@@ -19,7 +19,7 @@ const Led_cfg_t leds[Number_of_leds];
  * @brief Function to initialize the Led in the system
  * 
  */
-void Led_Init(void)
+void HAL_Led_Init(void)
 {
     GPIO_PinConfigs_t Led;
     Led.Pin_Mode=GPIO_PIN_OUTPUT_PUSHPULL_NP;
@@ -28,8 +28,9 @@ void Led_Init(void)
     {
         Led.Pin_num=leds[index].Pin_number;
         Led.Port=leds[index].Port;
+        GPIO_Init_Pin(&Led);
+        GPIO_Set_PinValue(leds[index].Port,leds[index].Pin_number,leds[index].default_status);
     }
-    GPIO_Init_Pin(&Led);
 }
 /**
  * @brief function to set the Led to specific status
@@ -39,7 +40,7 @@ void Led_Init(void)
  * 
  * @return Sys_enuErrorStates_t Error status about the operation
  */
-Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE)
+Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u8 LED_STATE)
 {
     Sys_enuErrorStates_t Error_Status=NOT_OK;
     /**
@@ -52,12 +53,12 @@ Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE)
      */
     if(leds[Led].Connection_type==LED_CONNECTION_FORWARD_DIR)
     {
-        if(leds[Led].default_status==LED_STATE_ON)
+        if(LED_STATE==LED_STATE_ON)
         {
             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
             Error_Status=OK;
         }
-        else if(leds[Led].default_status==LED_STATE_OFF)
+        else if(LED_STATE==LED_STATE_OFF)
         {
             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
             Error_Status=OK;
@@ -69,12 +70,12 @@ Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE)
     }
     else if(leds[Led].Connection_type==LED_CONNECTION_REVERSE_DIR)
     {
-        if(leds[Led].default_status==LED_STATE_ON)
+        if(LED_STATE==LED_STATE_ON)
         {
             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
             Error_Status=OK;
         }
-        else if(leds[Led].default_status==LED_STATE_OFF)
+        else if(LED_STATE==LED_STATE_OFF)
         {
             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
             Error_Status=OK;
@@ -89,5 +90,26 @@ Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE)
     {
         Error_Status=INVALID_INPUT_VALUE;
     }
+    return Error_Status;
+}
+
+/**
+ * @brief function to toggle the Corresponding led pin status
+ * 
+ * @param Led 
+ * @return Sys_enuErrorStates_t 
+ */
+Sys_enuErrorStates_t HAL_Led_toggleStatus(u8 Led)
+{
+    Sys_enuErrorStates_t Error_Status=NOT_OK;
+    if(Led>Number_of_leds)
+    {
+        Error_Status=INVALID_INPUT_VALUE;
+    }
+    else
+    {
+        GPIO_Toggle_PinValue(leds[Led].Port,leds[Led].Pin_number);
+    }
+
     return Error_Status;
 }

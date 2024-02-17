@@ -6,8 +6,8 @@
  * @date 2024-02-17
  * 
  */
-#include"STM32F401cc_MCAL_GPIO.h"
-#include"HAL_LED.h"
+#include"MCAL/GPIO/STM32F401cc_MCAL_GPIO.h"
+#include"HAL/LED/HAL_LED.h"
 
 /**
  * @brief constant array of Led configurations where the user can add the configurations for new added leds 
@@ -19,6 +19,12 @@ const Led_cfg_t leds[Number_of_leds]={
         .Port=GPIOA_BASE_ADDRESS,
         .Pin_number=GPIO_PIN_0,
         .Connection_type=LED_CONNECTION_FORWARD_DIR,
-        .default_status=LED_STATE_ON
+        .default_status=GPIO_PIN_STATUS_LOW
+    },
+    [Led_test]={
+        .Port=GPIOA_BASE_ADDRESS,
+        .Pin_number=GPIO_PIN_1,
+        .Connection_type=LED_CONNECTION_FORWARD_DIR,
+        .default_status=GPIO_PIN_STATUS_LOW    
     }
 };

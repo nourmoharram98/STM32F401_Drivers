@@ -13,7 +13,7 @@
 
 #include"typedefs.h"
 #include"Error_states.h"
-#include"HAL_LED_CONFIG.h"
+#include"HAL/LED/HAL_LED_CONFIG.h"
 
 #define LED_CONNECTION_FORWARD_DIR          0
 #define LED_CONNECTION_REVERSE_DIR          1
@@ -32,7 +32,7 @@ typedef struct {
  * @brief Function to initialize the Led in the system
  * 
  */
-void Led_Init(void);
+void HAL_Led_Init(void);
 
 /**
  * @brief function to set the Led to specific status
@@ -42,14 +42,14 @@ void Led_Init(void);
  * 
  * @return Sys_enuErrorStates_t Error status about the operation
  */
-Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE);
+Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u8 LED_STATE);
 
-
-
-
-
-
-
-
+/**
+ * @brief function to toggle the Corresponding led pin status
+ * 
+ * @param Led 
+ * @return Sys_enuErrorStates_t 
+ */
+Sys_enuErrorStates_t HAL_Led_toggleStatus(u8 Led);
 
 #endif

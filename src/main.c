@@ -30,8 +30,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../system/include/diag/trace.h"
-#include"STM32F401cc_MCAL_RCC.h"
-#include"STM32F401cc_MCAL_GPIO.h"
+#include"MCAL/RCC/STM32F401cc_MCAL_RCC.h"
+#include"MCAL/GPIO/STM32F401cc_MCAL_GPIO.h"
+#include"HAL/LED/HAL_LED.h"
+#include"HAL/SWITCH/HAL_SWITCH.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).
@@ -55,13 +57,21 @@
 
 #define RCC_TEST			0
 #define GPIO_TEST			1
-#define TEST				GPIO_TEST
+#define LED_TEST			2
+#define LED_SWITCH_TEST		3
+#define TEST				LED_SWITCH_TEST
 
 int
 main(int argc, char* argv[])
 {
-  // At this stage the system clock should have already been configured
-  // at high speed.
+ /**
+  * @brief enable the HSE clock source for the system
+  * @brief enable the clock for the GPIO A and GPIO C peripherals
+  * 
+  */
+  RCC_enable_CLK(CLK_SRC_RCC_HSE);
+  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
+  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
   #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
 	result=RCC_enable_CLK(CLK_SRC_RCC_HSE);
@@ -134,8 +144,44 @@ main(int argc, char* argv[])
 			
 		}
 	}
+	#elif TEST==LED_TEST
+	Led_Init();
+	Led_setStatus(Led_alarm,LED_STATE_OFF);
+	while(1)
+	{
+
+	}
+	#elif TEST==LED_SWITCH_TEST
+	Switch_Status_t Switch_status=Switch_Released;
+	Switch_Status_t Prev_Switch_status=Switch_Released;
+	HAL_Led_Init();
+	HAL_SWITCH_Init();
+	while(1)
+	{
+		HAL_SWITCH_enuSetSwitchState(SWITCH_NUMONE,&Switch_status);
+		/**
+		 * @brief copy the current switch status to the previous switch status variable
+		 * 
+		 */
+		if(Switch_status==Switch_Pressed)
+		{
+			Prev_Switch_status=Switch_status;
+		}
+		/**
+		 * @brief action will not be executed until the switch is released
+		 * 
+		 */
+		if(Switch_status==Switch_Released && Prev_Switch_status==Switch_Pressed)
+		{
+			Prev_Switch_status=Switch_status;
+			HAL_Led_toggleStatus(Led_alarm);
+		}
+	}
+
 	#endif
 }
+
+
 
 #pragma GCC diagnostic pop
 

@@ -4,8 +4,6 @@
  * @brief MCAL GPIO.h file to carry the interfaces of GPIO Driver
  * @version 0.1
  * @date 2024-02-17
- * 
- *  * 
  */
 #ifndef STM32F401CC_MCAL_GPIO_H_
 #define STM32F401CC_MCAL_GPIO_H_
@@ -117,5 +115,14 @@ Sys_enuErrorStates_t GPIO_Set_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 
  * @warning  
  */
 Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u8 *PtrToPinstatus);
+
+/**
+ * @brief function used to toggle the pin status
+ * 
+ * @param PtrToGPIOPort 
+ * @param GPIO_PINnum 
+ * @return Sys_enuErrorStates_t 
+ */
+Sys_enuErrorStates_t GPIO_Toggle_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum);
 
 #endif /* STM32F401CC_MCAL_GPIO_H_ */
