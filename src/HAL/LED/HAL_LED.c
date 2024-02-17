@@ -1,11 +1,9 @@
 /**
  * @file HAL_LED.C
  * @author Nour Moharram
- * @brief 
+ * @brief LED.c file that carry the implementation of the LED Interfaces
  * @version 0.1
  * @date 2024-02-17
- * 
- * @copyright Copyright (c) 2024
  * 
  */
 #include"typedefs.h"
@@ -18,7 +16,7 @@ const Led_cfg_t leds[Number_of_leds];
 
 
 /**
- * @brief 
+ * @brief Function to initialize the Led in the system
  * 
  */
 void Led_Init(void)
@@ -34,16 +32,24 @@ void Led_Init(void)
     GPIO_Init_Pin(&Led);
 }
 /**
- * @brief 
+ * @brief function to set the Led to specific status
  * 
  * @param Led 
  * @param LED_STATE 
  * 
- * @return 
+ * @return Sys_enuErrorStates_t Error status about the operation
  */
 Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE)
 {
     Sys_enuErrorStates_t Error_Status=NOT_OK;
+    /**
+     * @brief check if the connection type forward or reverse connection
+     * 
+     * @details in Forward direction connection the Led is enabled if its corresponding Pin is set to High
+     * and vice versa
+     * @details in Reverse direction connection the Led is enabled if its corresponding Pin is set to Low
+     * and vice versa
+     */
     if(leds[Led].Connection_type==LED_CONNECTION_FORWARD_DIR)
     {
         if(leds[Led].default_status==LED_STATE_ON)

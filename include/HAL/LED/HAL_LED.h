@@ -1,12 +1,11 @@
 /**
  * @file HAL_LED.h
  * @author Nour Moharram
- * @brief 
+ * @brief HAL led.h file that carry the declarations of the interfaces of LED in addition to 
+ * important macros
  * @version 0.1
  * @date 2024-02-17
- * 
- * @copyright Copyright (c) 2024
- * 
+ *  * 
  */
 
 #ifndef HAL_LED_H_
@@ -30,18 +29,18 @@ typedef struct {
 }Led_cfg_t;
 
 /**
- * @brief 
+ * @brief Function to initialize the Led in the system
  * 
  */
 void Led_Init(void);
 
 /**
- * @brief 
+ * @brief function to set the Led to specific status
  * 
  * @param Led 
  * @param LED_STATE 
  * 
- * @return 
+ * @return Sys_enuErrorStates_t Error status about the operation
  */
 Sys_enuErrorStates_t Led_setStatus(u8 Led,u8 LED_STATE);
 

@@ -1,10 +1,12 @@
-/*
- * STM32F401cc_MCAL_GPIO.h
- *
- *  Created on: Feb 16, 2024
- *      Author: Nour Moharram
+/**
+ * @file STM32F401cc_MCAL_GPIO.h
+ * @author Nour Moharram
+ * @brief MCAL GPIO.h file to carry the interfaces of GPIO Driver
+ * @version 0.1
+ * @date 2024-02-17
+ * 
+ *  * 
  */
-
 #ifndef STM32F401CC_MCAL_GPIO_H_
 #define STM32F401CC_MCAL_GPIO_H_
 
@@ -85,11 +87,35 @@ typedef struct
 	u8 Pin_Lock_Config;
 }GPIO_PinConfigs_t;
 
-
+/**
+ * @brief function used to configure GPIO Pin
+ * 
+ * @param PtrToPinConfig 
+ * @return Sys_enuErrorStates_t 
+ * @warning GPIO Port clock must be enabled before initialization 
+ */
 Sys_enuErrorStates_t GPIO_Init_Pin(GPIO_PinConfigs_t *PtrToPinConfig);
 
+/**
+ * @brief 
+ * 
+ * @param PtrToGPIOPort 
+ * @param GPIO_PINnum 
+ * @param GPIO_PIN_STATUS 
+ * @return Sys_enuErrorStates_t
+ * @warning GPIO Pin must be initialized first using GPIO_Init_Pin()  
+ */
 Sys_enuErrorStates_t GPIO_Set_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 GPIO_PIN_STATUS);
 
+/**
+ * @brief 
+ * 
+ * @param PtrToGPIOPort 
+ * @param GPIO_PINnum 
+ * @param PtrToPinstatus 
+ * @return Sys_enuErrorStates_t
+ * @warning  
+ */
 Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u8 *PtrToPinstatus);
 
 #endif /* STM32F401CC_MCAL_GPIO_H_ */

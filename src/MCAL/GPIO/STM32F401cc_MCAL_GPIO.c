@@ -1,10 +1,12 @@
-/*
- * STM32F401cc_MCAL_GPIO.c
- *
- *  Created on: Feb 16, 2024
- *      Author: Nour Moharram
+/**
+ * @file STM32F401cc_MCAL_GPIO.c
+ * @author Nour Moharram
+ * @brief MCAL GPIO.h file to carry the implementation of the interfaces of GPIO Driver
+ * @version 0.1
+ * @date 2024-02-17
+ * 
+ *  * 
  */
-
 #include"typedefs.h"
 #include"Masks.h"
 #include"Error_states.h"
