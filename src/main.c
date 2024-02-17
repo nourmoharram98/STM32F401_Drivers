@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include "../system/include/diag/trace.h"
 #include"STM32F401cc_MCAL_RCC.h"
-
+#include"STM32F401cc_MCAL_GPIO.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).
@@ -53,11 +53,16 @@
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
 
+#define RCC_TEST			0
+#define GPIO_TEST			1
+#define TEST				GPIO_TEST
+
 int
 main(int argc, char* argv[])
 {
   // At this stage the system clock should have already been configured
   // at high speed.
+  #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
 	result=RCC_enable_CLK(CLK_SRC_RCC_HSE);
 	if(result==RCC_OK)
@@ -90,6 +95,46 @@ main(int argc, char* argv[])
 
 	RCC_enable_CLK(CLK_SRC_RCC_PLL);
 	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_DIVIDEDB_256);
+	#elif TEST==GPIO_TEST
+	u8 Local_pin_status=55;
+	RCC_enable_CLK(CLK_SRC_RCC_HSE);
+	RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
+	RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
+
+
+	GPIO_PinConfigs_t PIN1={.Pin_num=GPIO_PIN_13,
+									.Port=GPIOC_BASE_ADDRESS,
+									.Pin_Mode=GPIO_PIN_INPUT_PULLUP,
+									.Pin_Speed=GPIO_PIN_MEDSPEED,
+									.Pin_Lock_Config=0};
+	GPIO_PinConfigs_t PIN2={.Pin_num=GPIO_PIN_0,
+									.Port=GPIOA_BASE_ADDRESS,
+									.Pin_Mode=GPIO_PIN_OUTPUT_PUSHPULL_NP,
+									.Pin_Speed=GPIO_PIN_MEDSPEED,
+									.Pin_Lock_Config=0};
+	GPIO_Init_Pin(&PIN1);
+	GPIO_Init_Pin(&PIN2);
+	
+
+
+	while(1)
+	{
+		GPIO_Get_PinValue(GPIOC_BASE_ADDRESS,GPIO_PIN_13,&Local_pin_status);
+
+		if(Local_pin_status==0)
+		{
+			GPIO_Set_PinValue(GPIOA_BASE_ADDRESS,GPIO_PIN_0,1);
+		}
+		else if(Local_pin_status==1)
+		{
+			GPIO_Set_PinValue(GPIOA_BASE_ADDRESS,GPIO_PIN_0,0);
+		}
+		else
+		{
+			
+		}
+	}
+	#endif
 }
 
 #pragma GCC diagnostic pop

@@ -396,12 +396,14 @@ RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 Copy
 		case AHB1_BUS:
 			if(CopyPeripheralStatus==PERIPHERAL_CLKENABLE)
 			{
+				Local_AHB1ENR = RCC->AHB1ENR;
 				Local_AHB1ENR &= ~(CopyPeripheralID);
 				Local_AHB1ENR |= CopyPeripheralID;
 				RCC->AHB1ENR = Local_AHB1ENR;
 			}
 			else if(CopyPeripheralStatus==PERIPHERAL_CLKDISABLE)
 			{
+				Local_AHB1ENR = RCC->AHB1ENR;
 				Local_AHB1ENR &= ~(CopyPeripheralID);
 				RCC->AHB1ENR = Local_AHB1ENR;
 
@@ -415,12 +417,14 @@ RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 Copy
 		case AHB2_BUS:
 			if(CopyPeripheralStatus==PERIPHERAL_CLKENABLE)
 			{
+				Local_AHB2ENR = RCC->AHB2ENR;
 				Local_AHB2ENR &= ~(CopyPeripheralID);
 				Local_AHB2ENR |= CopyPeripheralID;
 				RCC->AHB2ENR = Local_AHB2ENR;
 			}
 			else if(CopyPeripheralStatus==PERIPHERAL_CLKDISABLE)
 			{
+				Local_AHB2ENR = RCC->AHB2ENR;
 				Local_AHB2ENR &= ~(CopyPeripheralID);
 				RCC->AHB2ENR = Local_AHB2ENR;
 
@@ -434,12 +438,14 @@ RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 Copy
 		case APB1_BUS:
 			if(CopyPeripheralStatus==PERIPHERAL_CLKENABLE)
 			{
+				Local_APB1ENR = RCC->APB1ENR;
 				Local_APB1ENR &= ~(CopyPeripheralID);
 				Local_APB1ENR |= CopyPeripheralID;
 				RCC->APB1ENR= Local_APB1ENR;
 			}
 			else if(CopyPeripheralStatus==PERIPHERAL_CLKDISABLE)
 			{
+				Local_APB1ENR = RCC->APB1ENR;
 				Local_APB1ENR &= ~(CopyPeripheralID);
 				RCC->APB1ENR= Local_APB1ENR;
 
@@ -453,12 +459,14 @@ RCC_enuError_status RCC_EnableDisable_PERIPHCLK(RCC_enuBusType Bus_type,u32 Copy
 		case APB2_BUS:
 			if(CopyPeripheralStatus==PERIPHERAL_CLKENABLE)
 			{
+				Local_APB2ENR = RCC->APB2ENR;
 				Local_APB2ENR &= ~(CopyPeripheralID);
 				Local_APB2ENR |= CopyPeripheralID;
 				RCC->APB2ENR= Local_APB2ENR;
 			}
 			else if(CopyPeripheralStatus==PERIPHERAL_CLKDISABLE)
 			{
+				Local_APB2ENR = RCC->APB2ENR;
 				Local_APB2ENR &= ~(CopyPeripheralID);
 				RCC->APB2ENR= Local_APB2ENR;
 
