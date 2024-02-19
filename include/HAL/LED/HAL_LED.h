@@ -15,16 +15,16 @@
 #include"Error_states.h"
 #include"HAL/LED/HAL_LED_CONFIG.h"
 
-#define LED_CONNECTION_FORWARD_DIR          0
-#define LED_CONNECTION_REVERSE_DIR          1
+#define LED_CONNECTION_FORWARD_DIR          0x00000000
+#define LED_CONNECTION_REVERSE_DIR          0x00000001
 
-#define LED_STATE_ON                        1
-#define LED_STATE_OFF                       0
+#define LED_STATE_ON                        0x00000001
+#define LED_STATE_OFF                       0x00000000
 
 typedef struct {
     void *Port;
     u32 Pin_number;
-    u8 Connection_type;
+    u32 Connection_type;
     u8 default_status;
 }Led_cfg_t;
 
@@ -42,7 +42,7 @@ void HAL_Led_Init(void);
  * 
  * @return Sys_enuErrorStates_t Error status about the operation
  */
-Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u8 LED_STATE);
+Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u32 LED_STATE);
 
 /**
  * @brief function to toggle the Corresponding led pin status

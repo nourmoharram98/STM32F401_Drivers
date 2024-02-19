@@ -114,7 +114,7 @@ Sys_enuErrorStates_t GPIO_Set_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 
  * @return Sys_enuErrorStates_t
  * @warning  
  */
-Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u8 *PtrToPinstatus);
+Sys_enuErrorStates_t GPIO_Get_PinValue(void *PtrToGPIOPort,u32 GPIO_PINnum, u32 *PtrToPinstatus);
 
 /**
  * @brief function used to toggle the pin status

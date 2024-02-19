@@ -48,7 +48,7 @@ void HAL_SWITCH_Init(void)
 	{
 		Switch.Port=arrOfSwitches[index].port;
 		Switch.Pin_num=arrOfSwitches[index].Switch_Pin;
-		Switch.Pin_Mode=arrOfSwitches[index].Switch_Mode;
+		Switch.Pin_Mode=arrOfSwitches[index].SWITCH_PIN_MODE;
 		GPIO_Init_Pin(&Switch);
 	}
 }
@@ -58,10 +58,74 @@ void HAL_SWITCH_Init(void)
  *@brief  : Function to read the state of switch
  *@param  : switch ID and pointer to address where state will be assigned
  *@return : Error State
+ @version : 1
  */
-Sys_enuErrorStates_t HAL_SWITCH_enuSetSwitchState(u8 SWITCH,u8 *Switch_Status)
+// Sys_enuErrorStates_t HAL_SWITCH_enuSetSwitchState(u8 SWITCH,u8 *Switch_Status)
+// {
+//     Sys_enuErrorStates_t Error_Status=NOT_OK;
+// 	if(Switch_Status==NULL_POINTER)
+// 	{
+// 		Error_Status=NULL_POINTER_ERROR;
+// 	}
+//     else if (SWITCH < SWITCH_NUMONE || SWITCH >= Number_Of_Switches)
+//     {
+//         Error_Status = INVALID_INPUT_VALUE;
+//     }
+// 	else
+// 	{
+// 		//Error Status is ok until an error found in the switch mode
+// 		Error_Status=OK;
+//  		// Read the current state of the switch
+// 		GPIO_Get_PinValue(arrOfSwitches[SWITCH].port,arrOfSwitches[SWITCH].Switch_Pin,Switch_Status);
+// 		// Check the switch mode and update the provided pointer accordingly
+// 		if (arrOfSwitches[SWITCH].Switch_Mode == SWITCH_MODE_INTERNALPULLUP)
+// 		{
+// 			/**
+// 			 * @brief in Internal pull up mode if switch pressed it will output low voltage on corresponding pin
+// 			 * and if switch is released it will output high voltage on it
+// 			 */
+// 			if (*Switch_Status == Switch_Pressed_InternalPU)
+// 			{
+// 				*Switch_Status = Switch_Pressed;
+// 			}
+// 			else if (*Switch_Status == Switch_Released_InternalPU)
+// 			{
+// 				*Switch_Status = Switch_Released;
+// 			}
+// 		}
+// 		else if (arrOfSwitches[SWITCH].Switch_Mode == SWITCH_MODE_EXTERNALPULLDOWN)
+// 		{
+// 			/**
+// 			 * @brief in External pull down mode if switch pressed it will output high voltage on corresponding pin
+// 			 * and if switch is released it will output low voltage on it
+// 			 */
+// 			if (*Switch_Status == Switch_Pressed_ExternalPD)
+// 			{
+// 				*Switch_Status = Switch_Pressed;
+// 			}
+// 			else if (*Switch_Status == Switch_Released_ExternalPD)
+// 			{
+// 				*Switch_Status = Switch_Released;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			Error_Status=INVALID_INPUT_VALUE;
+// 		}
+// 	}
+//     return Error_Status;
+// }
+
+
+/**
+ *@brief  : Function to read the state of switch
+ *@param  : switch ID and pointer to address where state will be assigned
+ *@return : Error State
+ @version : 1.1
+ */
+Sys_enuErrorStates_t HAL_SWITCH_enuSetSwitchState(u8 SWITCH,u32 *Switch_Status)
 {
-    Sys_enuErrorStates_t Error_Status=NOT_OK;
+	Sys_enuErrorStates_t Error_Status=NOT_OK;
 	if(Switch_Status==NULL_POINTER)
 	{
 		Error_Status=NULL_POINTER_ERROR;
@@ -72,45 +136,25 @@ Sys_enuErrorStates_t HAL_SWITCH_enuSetSwitchState(u8 SWITCH,u8 *Switch_Status)
     }
 	else
 	{
-		//Error Status is ok until an error found in the switch mode
+		/**
+		 * @brief read the IDR pin current status
+		 * @brief toggle the pin current status with the value of the Switch connection mode to get 
+		 * the current switch status(pressed or released according to the truth table below)
+		 *  
+		 *            XOR                   PIN_CURRENT STATUS_HIGH(1)			PIN_CURRENT_STATUS_LOW(0)
+		 * 
+		 *            (1)
+		 *  SWITCH_CONNECTION_MODE_INTPU 	   SWITCH_RELEASED(0)					SWITCH_PRESSED(1)
+		 * 
+		 *            (0)
+		 *  SWITCH_CONNECTION_MODE_INTPD	   SWITCH_PRESSED(1)					SWITCH_RELEASED(0)
+		 */
+		u32 Local_switchstatus=0;
+		GPIO_Get_PinValue(arrOfSwitches[SWITCH].port,arrOfSwitches[SWITCH].Switch_Pin,&Local_switchstatus);
+
+		*Switch_Status=Local_switchstatus^arrOfSwitches[SWITCH].SWITCH_CONNECTION_MODE;
+		
 		Error_Status=OK;
- 		// Read the current state of the switch
-		GPIO_Get_PinValue(arrOfSwitches[SWITCH].port,arrOfSwitches[SWITCH].Switch_Pin,Switch_Status);
-		// Check the switch mode and update the provided pointer accordingly
-		if (arrOfSwitches[SWITCH].Switch_Mode == SWITCH_MODE_INTERNALPULLUP)
-		{
-			/**
-			 * @brief in Internal pull up mode if switch pressed it will output low voltage on corresponding pin
-			 * and if switch is released it will output high voltage on it
-			 */
-			if (*Switch_Status == Switch_Pressed_InternalPU)
-			{
-				*Switch_Status = Switch_Pressed;
-			}
-			else if (*Switch_Status == Switch_Released_InternalPU)
-			{
-				*Switch_Status = Switch_Released;
-			}
-		}
-		else if (arrOfSwitches[SWITCH].Switch_Mode == SWITCH_MODE_EXTERNALPULLDOWN)
-		{
-			/**
-			 * @brief in External pull down mode if switch pressed it will output high voltage on corresponding pin
-			 * and if switch is released it will output low voltage on it
-			 */
-			if (*Switch_Status == Switch_Pressed_ExternalPD)
-			{
-				*Switch_Status = Switch_Pressed;
-			}
-			else if (*Switch_Status == Switch_Released_ExternalPD)
-			{
-				*Switch_Status = Switch_Released;
-			}
-		}
-		else
-		{
-			Error_Status=INVALID_INPUT_VALUE;
-		}
 	}
     return Error_Status;
 }

@@ -72,6 +72,7 @@ main(int argc, char* argv[])
   RCC_enable_CLK(CLK_SRC_RCC_HSE);
   RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
   RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
+  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
   #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
 	result=RCC_enable_CLK(CLK_SRC_RCC_HSE);
@@ -152,8 +153,8 @@ main(int argc, char* argv[])
 
 	}
 	#elif TEST==LED_SWITCH_TEST
-	Switch_Status_t Switch_status=Switch_Released;
-	Switch_Status_t Prev_Switch_status=Switch_Released;
+	u32 Switch_status=SWITCH_RELEASED;
+	u32 Prev_Switch_status=SWITCH_RELEASED;
 	HAL_Led_Init();
 	HAL_SWITCH_Init();
 	while(1)
@@ -163,17 +164,19 @@ main(int argc, char* argv[])
 		 * @brief copy the current switch status to the previous switch status variable
 		 * 
 		 */
-		if(Switch_status==Switch_Pressed)
+		if(Switch_status==SWITCH_PRESSED)
 		{
 			Prev_Switch_status=Switch_status;
+			HAL_Led_setStatus(Led_test,LED_STATE_OFF);
 		}
 		/**
 		 * @brief action will not be executed until the switch is released
 		 * 
 		 */
-		if(Switch_status==Switch_Released && Prev_Switch_status==Switch_Pressed)
+		if(Switch_status==SWITCH_RELEASED && Prev_Switch_status==SWITCH_PRESSED)
 		{
 			Prev_Switch_status=Switch_status;
+			HAL_Led_setStatus(Led_test,LED_STATE_ON);
 			HAL_Led_toggleStatus(Led_alarm);
 		}
 	}

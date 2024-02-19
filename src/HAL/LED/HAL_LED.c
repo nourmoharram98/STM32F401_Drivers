@@ -37,62 +37,104 @@ void HAL_Led_Init(void)
  * 
  * @param Led 
  * @param LED_STATE 
+ * @return Sys_enuErrorStates_t Error status about the operation
+ * @version 1
+ */
+
+// Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u8 LED_STATE)
+// {
+//     Sys_enuErrorStates_t Error_Status=NOT_OK;
+//     /**
+//      * @brief check if the connection type forward or reverse connection
+//      * 
+//      * @details in Forward direction connection the Led is enabled if its corresponding Pin is set to High
+//      * and vice versa
+//      * @details in Reverse direction connection the Led is enabled if its corresponding Pin is set to Low
+//      * and vice versa
+//      */
+//     if(leds[Led].Connection_type==LED_CONNECTION_FORWARD_DIR)
+//     {
+//         if(LED_STATE==LED_STATE_ON)
+//         {
+//             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
+//             Error_Status=OK;
+//         }
+//         else if(LED_STATE==LED_STATE_OFF)
+//         {
+//             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
+//             Error_Status=OK;
+//         }
+//         else
+//         {
+//             Error_Status=INVALID_INPUT_VALUE;
+//         }
+//     }
+//     else if(leds[Led].Connection_type==LED_CONNECTION_REVERSE_DIR)
+//     {
+//         if(LED_STATE==LED_STATE_ON)
+//         {
+//             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
+//             Error_Status=OK;
+//         }
+//         else if(LED_STATE==LED_STATE_OFF)
+//         {
+//             GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
+//             Error_Status=OK;
+
+//         }
+//         else
+//         {
+//             Error_Status=INVALID_INPUT_VALUE;
+//         }
+//     }
+//     else
+//     {
+//         Error_Status=INVALID_INPUT_VALUE;
+//     }
+//     return Error_Status;
+// }
+
+/**
+ * @brief function to set the Led to specific status
+ * 
+ * @param Led 
+ * @param LED_STATE 
  * 
  * @return Sys_enuErrorStates_t Error status about the operation
+ * @version 1.1
  */
-Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u8 LED_STATE)
+Sys_enuErrorStates_t HAL_Led_setStatus(u8 Led,u32 LED_STATE)
 {
     Sys_enuErrorStates_t Error_Status=NOT_OK;
-    /**
-     * @brief check if the connection type forward or reverse connection
-     * 
-     * @details in Forward direction connection the Led is enabled if its corresponding Pin is set to High
-     * and vice versa
-     * @details in Reverse direction connection the Led is enabled if its corresponding Pin is set to Low
-     * and vice versa
-     */
-    if(leds[Led].Connection_type==LED_CONNECTION_FORWARD_DIR)
-    {
-        if(LED_STATE==LED_STATE_ON)
-        {
-            GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
-            Error_Status=OK;
-        }
-        else if(LED_STATE==LED_STATE_OFF)
-        {
-            GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
-            Error_Status=OK;
-        }
-        else
-        {
-            Error_Status=INVALID_INPUT_VALUE;
-        }
-    }
-    else if(leds[Led].Connection_type==LED_CONNECTION_REVERSE_DIR)
-    {
-        if(LED_STATE==LED_STATE_ON)
-        {
-            GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_LOW);
-            Error_Status=OK;
-        }
-        else if(LED_STATE==LED_STATE_OFF)
-        {
-            GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,GPIO_PIN_STATUS_HIGH);
-            Error_Status=OK;
-
-        }
-        else
-        {
-            Error_Status=INVALID_INPUT_VALUE;
-        }
-    }
-    else
+    if(Led>Number_of_leds)
     {
         Error_Status=INVALID_INPUT_VALUE;
     }
+    if(LED_STATE != LED_STATE_ON && LED_STATE != LED_STATE_OFF)
+    {
+        Error_Status=INVALID_INPUT_VALUE;
+    }       
+    else
+    {
+        /**
+         * @brief toggle the LED_STATE with the Led connection type 
+         * @brief value between parenthesis refer to pin status
+         *  
+         *            XOR                       LED_STATE_ON(1)			            LED_STATE_OFF(0)
+         * 
+         *            (0)                         (pin status)  
+         *  LED_CONNECTION_FORWARD_DIR 	        Led_on(1)					       Led_off(0)
+         * 
+         *            (1)
+         *  LED_CONNECTION_REVERSE_DIR	        Led_on(0)					        Led_off(1)
+         */
+        u32 Pin_status=0;
+        Pin_status=leds[Led].Connection_type^LED_STATE;
+        GPIO_Set_PinValue(leds[Led].Port,leds[Led].Pin_number,Pin_status);
+        Error_Status=OK;
+    }
     return Error_Status;
 }
-
 /**
  * @brief function to toggle the Corresponding led pin status
  * 
