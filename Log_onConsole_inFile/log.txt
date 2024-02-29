@@ -1,0 +1,10 @@
+Input numbers: 5, 10
+Sum: 15
+Difference: -5
+Product: 50
+Quotient: 0.50
+Input numbers: 5, 0
+Sum: 5
+Difference: 5
+Product: 0
+Cannot divide by zero!
