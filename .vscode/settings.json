@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "HAL_LED.C": "cpp",
+        "stm32f401cc_mcal_gpio.h": "c",
+        "hal_switch.h": "c",
+        "hal_led.h": "c",
+        "hal_led_config.h": "c",
+        "stm32f401cc_irqs.h": "c",
+        "error_states.h": "c"
+    }
+}

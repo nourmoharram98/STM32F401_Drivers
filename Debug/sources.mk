@@ -33,6 +33,10 @@ CPP_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+src/HAL/LED \
+src/HAL/SWITCH \
+src/MCAL/GPIO \
+src/MCAL/NVIC \
 src/MCAL/RCC \
 src \
 system/src/cmsis \

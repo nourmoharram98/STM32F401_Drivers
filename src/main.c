@@ -34,6 +34,7 @@
 #include"MCAL/GPIO/STM32F401cc_MCAL_GPIO.h"
 #include"HAL/LED/HAL_LED.h"
 #include"HAL/SWITCH/HAL_SWITCH.h"
+#include"MCAL/NVIC/STM32F401cc_MCAL_NVIC.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).
@@ -59,7 +60,8 @@
 #define GPIO_TEST			1
 #define LED_TEST			2
 #define LED_SWITCH_TEST		3
-#define TEST				LED_SWITCH_TEST
+#define NVIC_TEST			4
+#define TEST				NVIC_TEST
 
 int
 main(int argc, char* argv[])
@@ -181,7 +183,12 @@ main(int argc, char* argv[])
 			HAL_Led_toggleStatus(Led_alarm);
 		}
 	}
-
+	#elif TEST==NVIC_TEST
+	NVIC_EnableIRQ(NVIC_IRQ_EXTI16);
+	//NVIC_SetPendingIRQ(NVIC_IRQ_EXTI16);
+	NVIC_GenerateSWInterrupt(NVIC_IRQ_ADC);
+	NVIC_ConfigureBinaryPoint(NO_GROUPS);
+	NVIC_SetPriority(NVIC_IRQ_EXTI0,Preemption_level_fifteen,0);
 	#endif
 }
 
