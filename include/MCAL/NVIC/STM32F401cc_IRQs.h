@@ -1,7 +1,15 @@
 #ifndef STM32F401CC_IRQ_
 #define STM32F401CC_IRQ_
 
-
+/**
+ * @brief number of priority bits implemented in the priority registers by vendors
+ * 
+ */
+#define PRIORITY_IMPLEMENTED_BITS       0x4
+/**
+ * @brief enumeration for the interrupt sources in the STM32F401 refer to the vector table
+ * in reference manual
+ */
 typedef enum{
     NVIC_IRQ_WWDG,
     NVIC_IRQ_EXTI16,
@@ -10,6 +18,7 @@ typedef enum{
     NVIC_IRQ_FLASH,
     NVIC_IRQ_RCC,
     NVIC_IRQ_EXTI0,
+    NVIC_IRQ_EXTI1,
     NVIC_IRQ_EXTI2,
     NVIC_IRQ_EXTI3,
     NVIC_IRQ_EXTI4,

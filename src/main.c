@@ -63,6 +63,23 @@
 #define NVIC_TEST			4
 #define TEST				NVIC_TEST
 
+void delay_ms(u32 ms)
+{
+  for (volatile u32 i = 0; i < ms * 16000; ++i)
+  {
+  }
+}
+
+void EXTI0_IRQHandler(void)
+{
+  HAL_Led_setStatus(Led_alarm,LED_STATE_ON);
+}
+void EXTI1_IRQHandler(void)
+{
+  HAL_Led_setStatus(Led_test,LED_STATE_ON);
+ // delay_ms(10000);
+}
+
 int
 main(int argc, char* argv[])
 {
@@ -73,9 +90,10 @@ main(int argc, char* argv[])
   */
   RCC_enable_CLK(CLK_SRC_RCC_HSE);
   RCC_SELECT_SYSCLK(CLK_SRC_SYS_HSE);
-  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
+ // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
   RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
-  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
+ // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
+  HAL_Led_Init();
   #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
 	result=RCC_enable_CLK(CLK_SRC_RCC_HSE);
@@ -184,11 +202,21 @@ main(int argc, char* argv[])
 		}
 	}
 	#elif TEST==NVIC_TEST
-	NVIC_EnableIRQ(NVIC_IRQ_EXTI16);
-	//NVIC_SetPendingIRQ(NVIC_IRQ_EXTI16);
-	NVIC_GenerateSWInterrupt(NVIC_IRQ_ADC);
-	NVIC_ConfigureBinaryPoint(NO_GROUPS);
-	NVIC_SetPriority(NVIC_IRQ_EXTI0,Preemption_level_fifteen,0);
+	u8 priority=0;
+	NVIC_EnableIRQ(NVIC_IRQ_EXTI1);
+	NVIC_EnableIRQ(NVIC_IRQ_EXTI0);
+	
+	NVIC_ConfigureBinaryPoint(TWO_GROUPS);
+	NVIC_EncodePriority(Preemption_level_five,GROUP_Priority_one,&priority);
+	NVIC_SetPriority(NVIC_IRQ_EXTI1,priority);
+	NVIC_EncodePriority(Preemption_level_five,GROUP_Priority_zero,&priority);
+	NVIC_SetPriority(NVIC_IRQ_EXTI0,priority);
+	NVIC_SetPendingIRQ(NVIC_IRQ_EXTI1);
+	NVIC_SetPendingIRQ(NVIC_IRQ_EXTI0);
+	while(1)
+	{
+
+	}
 	#endif
 }
 
