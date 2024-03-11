@@ -6,6 +6,7 @@
  * 
  */
 #define PRIORITY_IMPLEMENTED_BITS       0x4
+
 /**
  * @brief enumeration for the interrupt sources in the STM32F401 refer to the vector table
  * in reference manual

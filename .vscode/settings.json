@@ -6,6 +6,8 @@
         "hal_led.h": "c",
         "hal_led_config.h": "c",
         "stm32f401cc_irqs.h": "c",
-        "error_states.h": "c"
+        "error_states.h": "c",
+        "masks.h": "c",
+        "stm32f401cc_mcal_systickconfig.h": "c"
     }
 }

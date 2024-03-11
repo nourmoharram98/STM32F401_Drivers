@@ -35,6 +35,7 @@
 #include"HAL/LED/HAL_LED.h"
 #include"HAL/SWITCH/HAL_SWITCH.h"
 #include"MCAL/NVIC/STM32F401cc_MCAL_NVIC.h"
+#include"MCAL/SYSTICK/STM32F401cc_MCAL_SYSTICK.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).
@@ -61,7 +62,8 @@
 #define LED_TEST			2
 #define LED_SWITCH_TEST		3
 #define NVIC_TEST			4
-#define TEST				NVIC_TEST
+#define SYSTICK_TEST		5
+#define TEST				SYSTICK_TEST
 
 void delay_ms(u32 ms)
 {
@@ -79,7 +81,11 @@ void EXTI1_IRQHandler(void)
   HAL_Led_setStatus(Led_test,LED_STATE_ON);
  // delay_ms(10000);
 }
-
+void toggle_led1(void)
+{
+	//HAL_Led_setStatus(Led_alarm,LED_STATE_ON);
+	HAL_Led_toggleStatus(Led_alarm);
+}
 int
 main(int argc, char* argv[])
 {
@@ -93,6 +99,7 @@ main(int argc, char* argv[])
  // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
   RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
  // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
+ 	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_NOTDIVIDED);
   HAL_Led_Init();
   #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
@@ -213,6 +220,16 @@ main(int argc, char* argv[])
 	NVIC_SetPriority(NVIC_IRQ_EXTI0,priority);
 	NVIC_SetPendingIRQ(NVIC_IRQ_EXTI1);
 	NVIC_SetPendingIRQ(NVIC_IRQ_EXTI0);
+	while(1)
+	{
+
+	}
+	#elif TEST==SYSTICK_TEST
+	SYSTICK_ConfigClkSrc(SYSTICK_CLKSRC_DIVBY8);
+	SYSTICK_ConfigInt(SYSTICK_INT_ENABLE);
+	SYSTICK_SetCallBack(toggle_led1,SYSTICK_CB_Num_zero);
+	SYSTICK_SetTime(1000);
+	SYSTICK_IsExpired();
 	while(1)
 	{
 
