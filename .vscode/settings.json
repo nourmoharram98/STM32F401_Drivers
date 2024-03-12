@@ -8,6 +8,14 @@
         "stm32f401cc_irqs.h": "c",
         "error_states.h": "c",
         "masks.h": "c",
-        "stm32f401cc_mcal_systickconfig.h": "c"
+        "stm32f401cc_mcal_systickconfig.h": "c",
+        "stm32f401cc_mcal_systick.h": "c",
+        "app1.h": "c",
+        "typedefs.h": "c",
+        "sched.h": "c",
+        "runnables.h": "c",
+        "hal_switch_config.h": "c",
+        "traffic_light_app.h": "c",
+        "stm32f401cc_mcal_rcc.h": "c"
     }
 }

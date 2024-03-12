@@ -69,7 +69,18 @@ void HAL_SWITCH_Init(void);
  *@param  : switch ID and pointer to address where state will be assigned
  *@return : Error State
  */
-Sys_enuErrorStates_t HAL_SWITCH_enuSetSwitchState(u8 SWITCH,u32 *Switch_Status);
+Sys_enuErrorStates_t HAL_SWITCH_enuGetSwitchState(u8 SWITCH,u32 *Switch_Status);
 
+/**
+ * @brief Function to get the switch status after solving the transient effect 
+ * @details Function used:
+ *  1-one global array [Switch_ActualStatus] :to carry the actual status of the pin to be shared between
+ * 	[Switch_Debouncing_Runnable] & [HAL_SWITCH_enuGetSwitchState]:
+ *  2-two local static arrays :
+ * 			A- Switch_PreviousStatus : to carry the previous status of the switches
+ * 			B- Switch_Counters to carry the counts of times when the previous status was equal to current status
+ * 3- when counts reach the [SWITCH_STATUS_CHECKS_THRESHOLD] it will change the actual status of the switch to the current status 
+ */
+void Switch_Debouncing_Runnable(void);
 
 #endif

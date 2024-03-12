@@ -267,16 +267,24 @@ Sys_enuErrorStates_t SYSTICK_SetTime(u32 Time_in_ms)
         {
             reload_value=SYSTICK_MAX_timeinms*SYSTICK_CLKPULSES_inms;
             SYSTICK->STK_LOAD=reload_value;
-            /**
-             * @brief Enable the SYSTICK Timer
-             */
-            SYSTICK->STK_CTRL |= ENABLE_CLR_MASK;
         }
         Error_Status=OK;
     }
     return Error_Status;
 }
 
+/**
+ * @brief function used to Start the Systick timer
+ * 
+ */
+
+void SYSTICK_Start(void)
+{
+    /**
+     * @brief Enable the SYSTICK Timer
+     */
+    SYSTICK->STK_CTRL |= ENABLE_CLR_MASK;
+}
 void SYSTICK_OFF(void)
 {
     /**
@@ -300,6 +308,11 @@ Sys_enuErrorStates_t SYSTICK_IsExpired(void)
 
 void SysTick_Handler(void)
 {
+    if(arrayOfCBs[SYSTICK_CB_Num_zero])
+    {
+        arrayOfCBs[SYSTICK_CB_Num_zero]();
+    }
+    /*
     int index;
     for (index = 0; index < NumberOfSYSTICKCBs; index++)
     {
@@ -328,7 +341,7 @@ void SysTick_Handler(void)
             
         }
     }
-    
+    */
    /*
    if(GlobalPtrtofunc)
    {

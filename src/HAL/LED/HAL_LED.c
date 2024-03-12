@@ -12,7 +12,7 @@
 #include"HAL/LED/HAL_LED.h"
 
 
-const Led_cfg_t leds[Number_of_leds];
+extern const Led_cfg_t leds[Number_of_leds];
 
 
 /**

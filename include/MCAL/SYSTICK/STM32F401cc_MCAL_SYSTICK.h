@@ -98,6 +98,13 @@ Sys_enuErrorStates_t SYSTICK_SetCallBack(PtrtoCBfunc_t ptrTofunc,SYSTICK_CallBac
 Sys_enuErrorStates_t SYSTICK_SetTime(u32 Time_in_ms);
 
 /**
+ * @brief function used to Start the Systick timer
+ * 
+ */
+
+void SYSTICK_Start(void);
+
+/**
  * @brief Turns off the SysTick timer.
  * @note Use this function to disable the SysTick timer when not needed.
  */

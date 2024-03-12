@@ -26,5 +26,23 @@ const Led_cfg_t leds[Number_of_leds]={
         .Pin_number=GPIO_PIN_1,
         .Connection_type=LED_CONNECTION_FORWARD_DIR,
         .default_status=GPIO_PIN_STATUS_LOW    
+    },
+    [Led_Red]={
+        .Port=GPIOA_BASE_ADDRESS,
+        .Pin_number=GPIO_PIN_2,
+        .Connection_type=LED_CONNECTION_FORWARD_DIR,
+        .default_status=GPIO_PIN_STATUS_LOW   
+    },
+    [Led_Yellow]={
+        .Port=GPIOA_BASE_ADDRESS,
+        .Pin_number=GPIO_PIN_3,
+        .Connection_type=LED_CONNECTION_FORWARD_DIR,
+        .default_status=GPIO_PIN_STATUS_LOW   
+    },
+    [Led_Green]={
+        .Port=GPIOA_BASE_ADDRESS,
+        .Pin_number=GPIO_PIN_4,
+        .Connection_type=LED_CONNECTION_FORWARD_DIR,
+        .default_status=GPIO_PIN_STATUS_LOW   
     }
 };

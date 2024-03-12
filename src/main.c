@@ -36,6 +36,7 @@
 #include"HAL/SWITCH/HAL_SWITCH.h"
 #include"MCAL/NVIC/STM32F401cc_MCAL_NVIC.h"
 #include"MCAL/SYSTICK/STM32F401cc_MCAL_SYSTICK.h"
+#include"SERVICE/SCHED.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).
@@ -63,8 +64,10 @@
 #define LED_SWITCH_TEST		3
 #define NVIC_TEST			4
 #define SYSTICK_TEST		5
-#define TEST				SYSTICK_TEST
+#define SCHEDULER			6
+#define TEST				SCHEDULER
 
+/*
 void delay_ms(u32 ms)
 {
   for (volatile u32 i = 0; i < ms * 16000; ++i)
@@ -86,6 +89,7 @@ void toggle_led1(void)
 	//HAL_Led_setStatus(Led_alarm,LED_STATE_ON);
 	HAL_Led_toggleStatus(Led_alarm);
 }
+*/
 int
 main(int argc, char* argv[])
 {
@@ -94,13 +98,13 @@ main(int argc, char* argv[])
   * @brief enable the clock for the GPIO A and GPIO C peripherals
   * 
   */
-  RCC_enable_CLK(CLK_SRC_RCC_HSE);
-  RCC_SELECT_SYSCLK(CLK_SRC_SYS_HSE);
- // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
-  RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
- // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
- 	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_NOTDIVIDED);
-  HAL_Led_Init();
+//   RCC_enable_CLK(CLK_SRC_RCC_HSE);
+//   RCC_SELECT_SYSCLK(CLK_SRC_SYS_HSE);
+//  // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
+//   RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
+//  // RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOBEN,PERIPHERAL_CLKENABLE);
+//  	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_NOTDIVIDED);
+//   HAL_Led_Init();
   #if TEST==RCC_TEST
 	RCC_enuError_status result=RCC_NOK;
 	result=RCC_enable_CLK(CLK_SRC_RCC_HSE);
@@ -234,6 +238,9 @@ main(int argc, char* argv[])
 	{
 
 	}
+	#elif TEST==SCHEDULER
+	SCHED_Init();
+	SCHED_Start();
 	#endif
 }
 
