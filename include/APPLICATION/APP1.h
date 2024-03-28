@@ -23,4 +23,10 @@ void APP1_Runnable2(void);
  */
 void APP1_LedSwitchRunnable(void);
 
+/**
+ * @brief LCD Runnable
+ * 
+ */
+
+
 #endif

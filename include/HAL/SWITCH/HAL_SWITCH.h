@@ -12,7 +12,7 @@
 
 #include"typedefs.h"
 #include"Error_states.h"
-#include"HAL/SWITCH/HAL_SWITCH_CONFIG.h"
+#include"cfg/HAL_SWITCH_CONFIG.h"
 
 
 

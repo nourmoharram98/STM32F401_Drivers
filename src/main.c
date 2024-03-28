@@ -37,6 +37,7 @@
 #include"MCAL/NVIC/STM32F401cc_MCAL_NVIC.h"
 #include"MCAL/SYSTICK/STM32F401cc_MCAL_SYSTICK.h"
 #include"SERVICE/SCHED.h"
+#include"HAL/LCD/HAL_LCD.h"
 // ----------------------------------------------------------------------------
 //
 // Standalone STM32F4 empty sample (trace via DEBUG).

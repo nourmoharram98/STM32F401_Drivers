@@ -3,7 +3,7 @@
 
 #include"Error_states.h"
 
-#define TICK_TIME           5
+#define TICK_TIME           2
 
 void SCHED_Init(void);
 

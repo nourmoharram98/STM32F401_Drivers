@@ -16,11 +16,13 @@ typedef void (*PtrToRunnable)(void);
  */
 typedef enum
 {
+    LCDRunnable,
     Runnable_zero,
-    Runnable_one,
-    Runnable_Switch_Debouncing,
-    Runnable_LedSwitch,
-    Traffic_Light_Runnable,
+    //Runnable_one,
+    //Runnable_Switch_Debouncing,
+    //Runnable_LedSwitch,
+    //Traffic_Light_Runnable,
+    
     NumberOfRunnables,
 }Runnables_list;
 
@@ -36,6 +38,7 @@ typedef struct
 }Runnables_t;
 
 
+extern void LCD_Runnable(void);
 
 
 

@@ -2,7 +2,7 @@
 #include"HAL/LED/HAL_LED.h"
 #include"HAL/SWITCH/HAL_SWITCH.h"
 #include"APPLICATION/APP1.h"
-
+#include"HAL/LCD/HAL_LCD.h"
 void APP1_Init(void)
 {
     /**
@@ -13,18 +13,23 @@ void APP1_Init(void)
     RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOAEN,PERIPHERAL_CLKENABLE);
     RCC_EnableDisable_PERIPHCLK(AHB1_BUS,AHB1_GPIOCEN,PERIPHERAL_CLKENABLE);
     HAL_Led_Init();
-    HAL_SWITCH_Init();
+    //HAL_SWITCH_Init();
 }
 
 void APP1_Runnable1(void)
 {
-   HAL_Led_toggleStatus(Led_alarm);
+   //HAL_Led_toggleStatus(Led_alarm);
+   HAL_Led_setStatus(Led_alarm,LED_STATE_OFF);
+   LCD_WriteStringAsync("Hello",5);
 
 }
 
 void APP1_Runnable2(void)
 {
-   // HAL_Led_toggleStatus(Led_alarm);
+   //HAL_Led_toggleStatus(Led_test);
+   HAL_Led_setStatus(Led_test,LED_STATE_ON);
+   //LCD_WriteStringAsync("World",5);
+
 }
 
 void APP1_LedSwitchRunnable(void)

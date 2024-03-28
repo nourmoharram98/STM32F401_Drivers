@@ -13,7 +13,7 @@
 
 #include"typedefs.h"
 #include"Error_states.h"
-#include"HAL/LED/HAL_LED_CONFIG.h"
+#include"cfg/HAL_LED_CONFIG.h"
 
 #define LED_CONNECTION_FORWARD_DIR          0x00000000
 #define LED_CONNECTION_REVERSE_DIR          0x00000001

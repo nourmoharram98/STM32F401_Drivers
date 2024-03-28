@@ -5,7 +5,7 @@
 #include"SERVICE/SCHED.h"
 #include"HAL/SWITCH/HAL_SWITCH.h"
 #include"APPLICATION/APP1.h"
-
+#include"HAL/LCD/HAL_LCD.h"
 /**
  * @brief the array of runnables in the system
  * 
@@ -27,7 +27,7 @@ static u32 TIME_STAMP=0;
  * @brief Intialize the arrayOfRemainingTime with the values of first Delay for each runnable
  * 
  */
-static u32 arrayOfRemainingTime[NumberOfRunnables]={1000,0,0,0,100};
+static u32 arrayOfRemainingTime[NumberOfRunnables]={30,0};
 
 /**
  * @brief call back function for the Systick Interrupt
@@ -69,10 +69,10 @@ static void Scheduler(void)
             arrOfRunnables[index].cb();
             arrayOfRemainingTime[index]=arrOfRunnables[index].Periodicity;
         }
-        else
-        {
+        // else
+        // {
             arrayOfRemainingTime[index]-=TICK_TIME;
-        }
+        // }
     }
 }
 
@@ -86,6 +86,7 @@ void SCHED_Init(void)
     RCC_SELECT_SYSCLK(CLK_SRC_SYS_HSE);
  	RCC_CONFIG_AHB_PRESCALLER(SYSCLK_AHB_NOTDIVIDED);
     APP1_Init();
+    LCD_InitAsync();
     SYSTICK_ConfigClkSrc(SYSTICK_CLKSRC_DIVBY8);
 	SYSTICK_ConfigInt(SYSTICK_INT_ENABLE);
 	SYSTICK_SetCallBack(TICK_CB,SYSTICK_CB_Num_zero);

@@ -16,6 +16,8 @@
         "runnables.h": "c",
         "hal_switch_config.h": "c",
         "traffic_light_app.h": "c",
-        "stm32f401cc_mcal_rcc.h": "c"
+        "stm32f401cc_mcal_rcc.h": "c",
+        "hal_lcd.h": "c",
+        "hal_lcd_config.h": "c"
     }
 }
