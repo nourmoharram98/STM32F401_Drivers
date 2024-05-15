@@ -18,6 +18,7 @@
         "traffic_light_app.h": "c",
         "stm32f401cc_mcal_rcc.h": "c",
         "hal_lcd.h": "c",
-        "hal_lcd_config.h": "c"
+        "hal_lcd_config.h": "c",
+        "stm32f401cc_mcal_usart.h": "c"
     }
 }

@@ -240,6 +240,8 @@ main(int argc, char* argv[])
 
 	}
 	#elif TEST==SCHEDULER
+	f32 local_var=0;
+	local_var=150/12.5;
 	SCHED_Init();
 	SCHED_Start();
 	#endif

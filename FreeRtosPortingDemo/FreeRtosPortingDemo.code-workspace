@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "FreeRtosPortingDemo",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"stm32f401cc_hal_rcc.h": "c",
+			"hal_switch.h": "c"
+		}
+	}
+}
